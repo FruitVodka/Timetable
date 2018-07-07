@@ -2,31 +2,28 @@
 
 {% block content %}
 
-	<div id='addfacdiv'>Pick teachers for section {{semester}}{{section}}</div>
+	<div id='addfacdiv'>Pick rooms for section {{semester}}{{section}}</div>
 
-	<form action='/pickedteachers' method='POST'>
-		{% for sub in subjects %}
-		<label class="subject">{{sub}}</label>
-		<div class="autocomplete" style="width:300px;">
-		<input type='text' name='theoryteachers' class="myInput">
-		</div>
+	<form action='/pickedrooms' method='POST'>
+		<label class="subject">Theory Subjects</label>
 		<br/>
-		{% endfor %}
+		<div class="autocomplete" style="width:300px;">
+		<input type='text' name='theoryroom' class="myInput">
+		</div>
+		<br/><br/>
 		{% for sub in labs %}
-		<label class="subject">{{sub}}</label>
+		<label class="subject">{{sub}}</label><br/>
 		<div class="autocomplete" style="width:300px;">
-		<input type='text' name='labteachers1' class="myInput">
-		<input type='text' name='labteachers2' class="myInput">
-		<input type='text' name='labteachers3' class="myInput">
-		<input type='text' name='labteachers4' class="myInput">
+		<input type='text' name='labroom1' class="myInput"><br/>
+		<input type='text' name='labroom2' class="myInput">
 		</div>
-		<br/>
+		<br/><br/>
 		{% endfor %}
 		<input type='submit'/>
 	</form>
 	<div id="outer" style="visibility:hidden">
-		{% for f in fac %}
-		<div class="faculty">{{f}}</div>
+		{% for f in classrooms %}
+		<div class="cr">{{f}}</div>
 		{% endfor %}
 	</div>
 {% endblock %}
@@ -34,11 +31,11 @@
 {% block script %}
 <script>
 
-	var x=document.getElementsByClassName("faculty");
+	var x=document.getElementsByClassName("cr");
 	teachers=[]
 	for(i=0; i<x.length; i++)
 	{
-		teachers.push(x[i].textContent.substring(6, x[i].textContent.length-3));
+		teachers.push(x[i].textContent.substring(2, x[i].textContent.length-3));
 	}
 	console.log(teachers);
 	var x=document.getElementsByClassName("myInput");

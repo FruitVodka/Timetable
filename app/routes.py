@@ -369,46 +369,69 @@ def delete_rooms():
 
 
 class OddEvenForm(Form):
-	oddeve = RadioField('OddEven',choices=[(1,'Odd'),(2,'Even')])
-	submit = SubmitField("Send")
+	oddeve = RadioField('Select semester category: ',choices=[(1,'Odd'),(2,'Even')])
+	submit = SubmitField("Next")
 
 oe=-1
+
 @app.route('/start', methods = ['GET', 'POST'])
 def start():
 	global oe
 	form1 = OddEvenForm()
 	if request.method == 'POST':
    		oe = request.form['oddeve']
-   		print(oe)
-   		return redirect("/sem")
-	return render_template('start.html', form = form1,code=302)
+   		return redirect('/Central_Init')
+	return render_template('start.html',form=form1,code=302)
 
 ns=-1
 semester=-1
-@app.route('/sem',methods=['GET','POST'])
-def sem():
-	if(int(float(oe))%2!=0):
-		class SemForm(Form):
-			sem = SelectField('Semester', choices = [(3,'Three'),(5,'Five'),(7,'Seven')])
-			nos = IntegerField("Number of Sections",[validators.Required("Please enter number of sections")])
-			submit = SubmitField("Send")
-	else:
-		class SemForm(Form):
-			sem = SelectField('Semester', choices = [(4,'Four'),(6,'Six'),(8,'Eight')])
-			nos = IntegerField("Number of Sections",[validators.Required("Please enter number of sections")])
-			submit = SubmitField("Send")
-	global ns
-	global semester
-	form = SemForm()
-	if request.method == 'POST':
-		n = request.form['nos']
-		ns=int(float(n))
-		n=request.form['sem']
-		semester=int(float(n))
-		return redirect("/subject")
-	return render_template('sem.html', form = form)
 
+@app.route('/Central_Init')
+def Central_Init():
+	if oe=='1':
+		session['semesters']=['3','5','7']
+	elif oe=='2':
+		session['semesters']=['4','6','8']
+	session['currentsem']=session.get('semesters')[0]
+	return redirect('/Central')
+
+@app.route('/Central')
+def Central():
+	currentsem=session.get('currentsem')
+	semesters=session.get('semesters')
+	if currentsem==semesters[0]:
+		nextsem=semesters[1]
+	elif currentsem==semesters[1]:
+		nextsem=semesters[2]
+	elif currentsem==semesters[2]:
+		nextsem="NULL"
+	elif currentsem=="NULL":
+		return "All wrapped up! Everything's sitting in the database!"
+	session['currentsem']=nextsem
+	return render_template('picksections.html',currentsem=currentsem)
+
+@app.route('/pickedsections', methods=['GET','POST'])
+def pickedsections():
+	ns=request.form.getlist('number_of_sections')[0]
+	semester=session.get('currentsem')
+	con=mysql.connect()
+	cursor=con.cursor()
+	sections=[]
+	zeroes=[]
+	ss='A'
+	for i in range(ns):
+		sections.append(ss)
+		ss=chr(ord(ss)+1)
+		zeroes.append(0)
+	for i in range(ns):
+		cursor.callproc('create_Class',(semester,sections[i]))
+	con.commit()
+	session['currentsection']='A'
+	session['whatsdone']=zeroes
+	return "Hi"
+	
 subjects=[]
+labs=[]
 class subForm(Form):
 	global subjects
 	con=mysql.connect()
@@ -433,9 +456,10 @@ class subForm(Form):
 def subject():
 	form = subForm()
 	global subjects
+	global labs
 	if request.method == 'POST':
-		subjects.extend([request.form['subt1'],request.form['subt2'],request.form['subt3'],request.form['subt4'],request.form['subt5'],request.form['subl1'],request.form['subl2'],request.form['subl3']])
-		# if sem>4 and sem<8:
+		subjects.extend([request.form['subt1'],request.form['subt2'],request.form['subt3'],request.form['subt4'],request.form['subt5']])
+		labs.extend([request.form['subl1'],request.form['subl2'],request.form['subl3']])
 		return redirect("/writesections")
 	return render_template('sub.html',form=form)
 
@@ -483,13 +507,24 @@ def pickteachers():
 	cursor.execute(fac)
 	data=cursor.fetchall()
 	fac=data
-	return render_template('pickteachers.html',semester=semester,section=section,subjects=subjects,fac=fac)
+	global subjects
+	global labs
+	print(subjects, labs)
+	return render_template('pickteachers.html',semester=semester,section=section,subjects=subjects,fac=fac, labs=labs)
 	
 @app.route('/pickedteachers', methods=['GET', 'POST'])
 def pickedteachers():
-	teachers= request.form.getlist('teachers')
+	theoryteachers= request.form.getlist('theoryteachers')
+	labteachers1=request.form.getlist('labteachers1')
+	labteachers2=request.form.getlist('labteachers2')
+	labteachers3=request.form.getlist('labteachers3')
+	labteachers4=request.form.getlist('labteachers4')
+	print(theoryteachers)
+	print("")
+	print(labteachers1, labteachers2, labteachers3, labteachers4)
 	row=[]
 	global subjects
+	global labs
 	global semester
 	con=mysql.connect()
 	cursor=con.cursor()
@@ -499,7 +534,7 @@ def pickedteachers():
 		row.append(str(semester))
 		row.append(cur)
 		getsub="select code from subject where title='%s'"%subjects[i]
-		getfac="select initials from faculty where name like '%"+teachers[i]+"'"
+		getfac="select initials from faculty where name like '%"+theoryteachers[i]+"'"
 		cursor.execute(getsub)
 		data=cursor.fetchall()
 		row.append(data[0][0])
@@ -510,6 +545,98 @@ def pickedteachers():
 		data=cursor.fetchall()
 		print(data)
 		row=[]
-	return redirect('/pickteachers')
-	
+	for i in range(len(labs)):
+		next=session.get('currentsection')
+		cur=chr(ord(next)-1)
+		row.append(str(semester))
+		row.append(cur)
+		getsub="select code from subject where title='%s'"%labs[i]
+		cursor.execute(getsub)
+		data=cursor.fetchall()
+		row.append(data[0][0])
+		getfac1="select initials from faculty where name like '%"+labteachers1[i]+"'"
+		cursor.execute(getfac1)
+		data=cursor.fetchall()
+		row.append(data[0][0])
+		cursor.callproc('create_Teachessection',(row[0],row[1],row[2],row[3]))
+		if labteachers2[i]!="":
+			getfac2="select initials from faculty where name like '%"+labteachers2[i]+"'"
+			cursor.execute(getfac2)
+			data=cursor.fetchall()
+			row.append(data[0][0])
+			cursor.callproc('create_Teachessection',(row[0],row[1],row[2],row[4]))
+		if labteachers3[i]!="":
+			getfac3="select initials from faculty where name like '%"+labteachers3[i]+"'"
+			cursor.execute(getfac3)
+			data=cursor.fetchall()
+			row.append(data[0][0])
+			cursor.callproc('create_Teachessection',(row[0],row[1],row[2],row[5]))
+		if labteachers4[i]!="":
+			getfac4="select initials from faculty where name like '%"+labteachers4[i]+"'"
+			cursor.execute(getfac4)
+			data=cursor.fetchall()
+			row.append(data[0][0])
+			cursor.callproc('create_Teachessection',(row[0],row[1],row[2],row[6]))
+		row=[]
+	con.commit()
+	return redirect('/pickrooms')
 
+@app.route('/pickrooms')
+def pickrooms():
+	section=session.get('currentsection')
+	section=chr(ord(section)-1)
+	zeroes=session.get('whatsdone')
+	con=mysql.connect()
+	cursor=con.cursor()
+	cr="select roomno from room"
+	cursor.execute(cr)
+	data=cursor.fetchall()
+	classrooms=data
+	global labs
+	return render_template('pickrooms.html',semester=semester,section=section,labs=labs,classrooms=classrooms)
+
+@app.route('/pickedrooms', methods=['GET', 'POST'])
+def pickedrooms():
+	theoryroom= request.form.getlist('theoryroom')
+	labroom1=request.form.getlist('labroom1')
+	labroom2=request.form.getlist('labroom2')
+	print(theoryroom)
+	print("")
+	print(labroom1, labroom2)
+	row=[]
+	global subjects
+	global labs
+	global semester
+	con=mysql.connect()
+	cursor=con.cursor()
+	for i in range(len(subjects)):
+		next=session.get('currentsection')
+		cur=chr(ord(next)-1)
+		row.append(str(semester))
+		row.append(cur)
+		getsub="select code from subject where title='%s'"%subjects[i]
+		cursor.execute(getsub)
+		data=cursor.fetchall()
+		row.append(data[0][0])
+		row.append(theoryroom)
+		cursor.callproc('create_Roomssection',(row[0],row[1],row[2],row[3]))
+		data=cursor.fetchall()
+		print(data)
+		row=[]
+	for i in range(len(labs)):
+		next=session.get('currentsection')
+		cur=chr(ord(next)-1)
+		row.append(str(semester))
+		row.append(cur)
+		getsub="select code from subject where title='%s'"%labs[i]
+		cursor.execute(getsub)
+		data=cursor.fetchall()
+		row.append(data[0][0])
+		row.append(labroom1[i])
+		cursor.callproc('create_Roomssection',(row[0],row[1],row[2],row[3]))
+		if labroom2[i]!="":
+			row.append(labroom2[i])
+			cursor.callproc('create_Roomssection',(row[0],row[1],row[2],row[4]))
+		row=[]
+	con.commit()
+	return redirect('/pickteachers')

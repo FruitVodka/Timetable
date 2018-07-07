@@ -45,7 +45,6 @@ body {
 	padding: 114px 0 0;
 }
 #header .section ul li {
-	background: url(../static/images/bg-nav-right.jpg) no-repeat top right;
 	display: inline-block;
 	float: left;
 	list-style: none;
@@ -748,79 +747,34 @@ table.paleBlueRows thead th:first-child {
 	cursor:pointer;
 }
 
-#footer {
-	background: #4c8f96;
-	border-top: 1px solid #9bd9e0;
-	margin: 0;
-	padding: 0;
+/*odd-even form*/
+#oddevenform{
+	position:absolute;
+	top:300px;
+	left:300px;
 }
-#footer > div {
-	margin: 0 auto;
-	padding: 30px 0 28px;
-	overflow: hidden;
-	text-align: center;
-	width: 960px;
+
+#oddevenform .headinglabel{
+	color:#5fb3bd;
+	font-size:30px;
 }
-#footer div p {
-	color: #ededed;
-	display: inline-block;
-	float: right;
-	font-size: 12px;
-	letter-spacing: 0.05em;
-	margin: 0;
-	padding: 27px 0 0;
-	text-align: center;
+
+#oddevenform .options{
+	text-decoration:none;
+	list-style-type:none;
+	font-size:23px;
 }
-#footer div .connect {
-	background: #387a82;
-	float: right;
-	height: 18px;
-	margin: 0 20px 0 150px;
-	padding: 22px 20px;
-	overflow: hidden;
-	width: 144px;
+
+#picksections_div{
+	color:#5fb3bd;
+	font-size:30px;
+	position:absolute;
+	top:300px;
+	left:300px;
 }
-#footer div .connect span {
-	color: #ededed;
-	display: inline-block;
-	float: left;
-	font-size: 12px;
-	height: 19px;
-	line-height: 21px;
-	margin: 0;
-	padding: 0 0 0 39px;
-}
-#footer div .connect a {
-	background: url(../static/images/icons.png) no-repeat;
-	display: block;
-	float: left;
-	height: 20px;
-	margin: 0 8px;
-	padding: 0;
-	text-indent: -99999px;
-	width: 20px;
-}
-#footer div .connect #twitter {
-	background-position: 0 -32px;
-}
-#footer div .connect #twitter:hover {
-	background-position: -25px -32px;
-}
-#footer div .connect #facebook {
-	background-position: 0 -57px;
-}
-#footer div .connect #facebook:hover {
-	background-position: -25px -57px;
-}
-#footer div .connect #googleplus {
-	background-position: 0 -82px;
-}
-#footer div .connect #googleplus:hover {
-	background-position: -25px -82px;
-}
-#footer div .connect #pinterest {
-	background-position: 0 -107px;
-}
-#footer div .connect #pinterest:hover {
-	background-position: -25px -107px;
+
+#picksections_form{
+	position:absolute;
+	top:380px;
+	left:300px;
 }

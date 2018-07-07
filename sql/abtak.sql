@@ -193,7 +193,7 @@ create table teachessection(
 	foreign key(initials) references faculty(initials),
 	foreign key(semester, section) references class(semester, section),
 	foreign key(code) references subject(code),
-	primary key(semester, section, code)
+	primary key(semester, section, code, initials)
 );
 
 DELIMITER $$
@@ -204,7 +204,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `create_Teachessection`(
 	in initials varchar(10)
 )
 BEGIN
-    if (select exists(select 1 from teachessection ts where ts.semester=semester and ts.section=section and ts.code=code)) THEN
+    if (select exists(select 1 from teachessection ts where ts.semester=semester and ts.section=section and ts.code=code and ts.initials=initials)) THEN
      
         select 'Teacher already exists for this combination of class and code.';
      
@@ -214,6 +214,41 @@ BEGIN
         values
         (
             semester, section, code, initials
+        );
+     
+    END IF;
+END$$
+DELIMITER ;
+
+create table roomssection(
+	semester char(1),
+	section char(1),
+	code varchar(10),
+	roomno varchar(10),
+	foreign key(roomno) references room(roomno),
+	foreign key(semester, section) references class(semester, section),
+	foreign key(code) references subject(code),
+	primary key(semester, section, code, roomno)
+);
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_Roomssection`(
+    in semester char(1),
+    in section char(1),
+	in code varchar(10),
+	in roomno varchar(10)
+)
+BEGIN
+    if (select exists(select 1 from roomssection ts where ts.semester=semester and ts.section=section and ts.code=code and ts.roomno=roomno)) THEN
+     
+        select 'Room already allotted for this combination of class and code.';
+     
+    ELSE
+     
+        insert into roomssection
+        values
+        (
+            semester, section, code, roomno
         );
      
     END IF;

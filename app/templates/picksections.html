@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<div id="picksections_div">Enter number of sections for Semester {{currentsem}}</div>
+	<form action = "/pickedsections" method=post id="picksections_form">
+	<input type="number" name="number_of_sections" min="1"/>
+	<input type="submit" value="Next"/>		
+	</form>
+
+{% endblock %}
