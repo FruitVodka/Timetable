@@ -428,7 +428,7 @@ def pickedsections():
 	con.commit()
 	session['currentsection']='A'
 	session['whatsdone']=zeroes
-	return "Hi"
+	return "Hi, this is me"
 	
 subjects=[]
 labs=[]
