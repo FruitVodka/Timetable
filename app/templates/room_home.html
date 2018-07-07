@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="article">
+			<a href="/load_rooms" class="fac">Load Classrooms to Database</a><br><br><br>
+			{% if v %}
+				<img src="static/images/smalltick.png" class="smalltickts"></img>
+			{% endif %}
+			<a href="/delete_rooms" class="fac">Delete All Classrooms</a>
+			{% if v2 %}
+				<img src="static/images/smalltick.png" class="smalltick2ts"></img>
+			{% endif %}
+{% endblock %}

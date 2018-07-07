@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Home</title>
+	<link rel="stylesheet" href="static/style.css" type="text/css">
+	<link rel='stylesheet' href='static/autocomplete.css' type='text/css'>
+</head>
+<body>
+	<div id="header">
+		<div class="section">
+			<div class="logo">
+				<a href="/">DASHBOARD</a>
+			</div>
+			<ul>
+				<li class="selected">
+					<a href="/">home</a>
+				</li>
+				<li>
+					<a href="/room_home">rooms</a>
+				</li>
+				<li>
+					<a href="/faculty_home">faculty</a>
+				</li>
+				<li>
+					<a href="/timeslot_home">timeslots</a>
+				</li>
+				<li>
+					<a href="/subject_home">subjects</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	{% block content %}{% endblock %}
+</body>
+	{% block script %}{% endblock %}
+</html>

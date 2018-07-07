@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="article">
+			<a href="/load_subject" class="fac">Load Core Subject List to Database</a><br><br><br>
+			{% if v %}
+				<img src="static/images/smalltick.png" class="smallticke"></img>
+			{% endif %}
+			<a href="/load_elective" class="fac">Load Elective Subject List to Database</a><br><br><br>
+			{% if v3 %}
+				<img src="static/images/smalltick.png" class="smalltickez"></img>
+			{% endif %}
+			<a href="/subject_table" class="fac">View Current Subject List</a><br><br><br>
+			<a href="/delete_subjects" class="fac">Delete All Subjects</a>
+			{% if v2 %}
+				<img src="static/images/smalltick.png" class="smalltick2"></img>
+			{% endif %}
+			
+{% endblock %}

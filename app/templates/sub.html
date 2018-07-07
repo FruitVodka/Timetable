@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action = "/subject" method="POST" onSubmit="return check()" id="subjform">
+	{{ form.subt1.label }}<br>{{ form.subt1 }}<br><br>
+	{{ form.subt2.label }}<br>{{ form.subt2 }}<br><br>
+	{{ form.subt3.label }}<br>{{ form.subt3 }}<br><br>
+	{{ form.subt4.label }}<br>{{ form.subt4 }}<br><br>
+	{{ form.subt5.label }}<br>{{ form.subt5 }}<br><br>
+	{{ form.subl1.label }}<br>{{ form.subl1 }}<br><br>
+	{{ form.subl2.label }}<br>{{ form.subl2 }}<br><br>
+	{{ form.subl3.label }}<br>{{ form.subl3 }}<br><br>
+	{{ form.submit }}
+</form>
+{% endblock %}
+
+{% block script %}
+<script>
+	function check()
+	{
+		var subt1=document.getElementById("subt1")
+		var subt2=document.getElementById("subt2")
+		var subt3=document.getElementById("subt3")
+		var subt4=document.getElementById("subt4")
+		var subt5=document.getElementById("subt5")
+		var subl1=document.getElementById("subl1")
+		var subl2=document.getElementById("subl2")
+		var subl3=document.getElementById("subl3")
+		var flag=0
+		var sub=[subt1,subt2,subt3,subt4,subt5,subl1,subl2,subl3]
+		console.log(sub)
+		for(i=0;i<sub.length;i++)
+		{
+			for(j=i+1;j<sub.length;j++)
+			{
+				if(sub[i].value==sub[j].value)
+					flag=1
+			}
+		}
+		if(flag)
+		{
+			alert("All subjects chosen must be distinct.")
+			return false
+		else
+			return true
+	}
+</script>
+{% endblock %}

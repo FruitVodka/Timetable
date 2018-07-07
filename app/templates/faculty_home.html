@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="article">
+			<a href="/load_faculty" class="fac">Load Faculty List to Database</a><br><br><br>
+			{% if v %}
+				<img src="static/images/smalltick.png" class="smalltick"></img>
+			{% elif nv %}
+				<img src="static/images/smallcross.png" class="smalltick"></img>
+			{% endif %}
+			<a href="/faculty_table" class="fac">View Current Faculty List</a><br><br><br>
+			<a href="/add_one_faculty_form" class="fac">Add Faculty</a><br><br><br>
+			<a href="/delete_all_faculty" class="fac">Delete All Faculty</a>
+			{% if v2 %}
+				<img src="static/images/smalltick.png" class="smalltick2"></img>
+			{% endif %}
+{% endblock %}

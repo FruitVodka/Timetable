@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div id='addfacdiv'>Add to Faculty List</div>
+	<form action='/add_one_faculty' method='GET' id='addform' onSubmit="return check()">
+		<label>Initials</label><br/>
+		<input type='text' name='initials' class='add1'/><br/><br/>
+		<label>Name</label><br/>
+		<input type='text' name='name' class='add1'/><br/><br/>
+		<label>Designation</label><br/>
+		<input type='text' name='designation' class='add1'/><br/><br/>
+		<label>Phone Number</label><br/>
+		<input type='text' name='phone' class='add1'/><br/><br/>
+		<label>Email ID</label><br/>
+		<input type='text' name='email' class='add1'/><br/><br/>
+		<input type='submit' value='Add' id='add1sub'/>
+	</form>
+
+{% endblock %}
+
+{% block script %}
+<script>
+	check()
+	function check()
+	{
+		var fields=document.getElementsByClassName('add1')
+		if(fields[0].value.length>10)
+			return false
+		if(fields[1].value.length>30)
+			return false
+		if(fields[2].value.length>30)
+			return false
+		if(fields[3].value.length>15)
+			return false
+		if(fields[4].value.length>30)
+			return false
+		return true
+	}
+</script>
+
+{% endblock %}
+
+	
+		

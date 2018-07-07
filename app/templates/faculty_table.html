@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="ftable">
+	<table class="paleBlueRows">
+		<thead>
+		<tr>
+		<th>Initials</th>
+		<th>Name</th>
+		<th>Designation</th>
+		<th>Phone number</th>
+		<th>Email ID</th>
+		<th>Edit</th>
+		<th>Delete</th>
+		</tr>
+		</thead>
+		<tbody>
+			{% for d in data2 %}
+			<tr><td>{{d[0]}}</td><td>{{d[1]}}</td><td>{{d[2]}}</td><td>{{d[3]}}</td><td>{{d[4]}}</td>
+			<td class="edit">E</td><td class="delete">D</td></tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	</div>
+	<div class="overlay"></div>	
+{% endblock %}
+
+{% block script %}
+<script>
+	edits=document.getElementsByClassName("edit");
+	deletes=document.getElementsByClassName("delete")
+	for(i=0;i<edits.length;i++)
+		edits[i].addEventListener('click',edit,false);
+	for(i=0;i<deletes.length;i++)
+		deletes[i].addEventListener('click',del,false);
+	
+	function edit(e)
+	{
+		edits=document.getElementsByClassName("edit");
+		deletes=document.getElementsByClassName("delete")
+		for(i=0;i<edits.length;i++)
+			edits[i].removeEventListener('click',edit,false);
+		for(i=0;i<deletes.length;i++)
+			deletes[i].removeEventListener('click',del,false);
+		console.log(e.target)
+		//getting initials
+		var x=e.target.parentNode.firstChild.textContent
+		var row=e.target.parentNode
+		var div=document.createElement('div')
+		div.id='editpopdiv'
+		var nm=row.children[1].textContent
+		div.textContent='Edit required fields for '+nm
+		var form=document.createElement('form')
+		form.method='GET'
+		form.action='/edit_faculty'
+		var oldinit=document.createElement('input');
+		oldinit.type='text'
+		oldinit.value=x
+		console.log(oldinit)
+		oldinit.name='oldinitials'
+		oldinit.style.display='none'
+		form.append(oldinit)
+		var init=document.createElement('input');
+		init.type='text';
+		init.name='initials'
+		init.placeholder='Initials';
+		init.id='i'
+		form.appendChild(init)
+		var name=document.createElement('input');
+		name.type='text';
+		name.name='name'
+		name.placeholder='Name';
+		name.id='n'
+		form.appendChild(name)
+		var desig=document.createElement('input')
+		desig.type='text';
+		desig.name='designation'
+		desig.placeholder='Designation';
+		desig.id='d'
+		form.appendChild(desig)
+		var phone=document.createElement('input')
+		phone.type='text';
+		phone.name='phone'
+		phone.id='p'
+		phone.placeholder='Phone Number';
+		form.appendChild(phone)
+		var email=document.createElement('input')
+		email.type='text';
+		email.name='email';
+		email.id='e'
+		email.placeholder='Email ID';
+		form.appendChild(email)
+		var sub=document.createElement('input')
+		sub.value='Edit'
+		sub.type='submit'
+		sub.name='submit'
+		sub.id='sub'
+		form.appendChild(sub)
+		div.appendChild(form)
+		var no=document.createElement('div')
+		no.textContent='Cancel'
+		no.id='no_editb'
+		no.addEventListener('click',closediv,false)
+		div.appendChild(no)
+		document.body.appendChild(div)
+		overlay=document.getElementsByClassName("overlay")
+		overlay[0].style.display='inline'		
+	}
+	
+	function del(e)
+	{
+		edits=document.getElementsByClassName("edit");
+		deletes=document.getElementsByClassName("delete")
+		for(i=0;i<edits.length;i++)
+			edits[i].removeEventListener('click',edit,false);
+		for(i=0;i<deletes.length;i++)
+		deletes[i].removeEventListener('click',del,false);
+		console.log(e.target)
+		//getting initials
+		var x=e.target.parentNode.firstChild.textContent
+		var div=document.createElement('div')
+		div.id='delpopdiv'
+		div.textContent='Are you sure you want to permanently delete this record?';
+		var a=document.createElement('a')
+		a.innerHTML='Delete'
+		a.href='/delete_one_faculty/'+x
+		div.appendChild(a)
+		var no=document.createElement('div')
+		no.textContent='No'
+		no.id='no_button'
+		no.addEventListener('click',closediv,false)
+		div.appendChild(no)
+		document.body.appendChild(div)
+		console.log(a)
+		overlay=document.getElementsByClassName("overlay")
+		overlay[0].style.display='inline'
+	}	
+	
+	function closediv(e)
+	{
+		var x=e.target.parentNode
+		console.log(x)
+		document.body.removeChild(x)
+		overlay=document.getElementsByClassName("overlay")
+		overlay[0].style.display='none'
+		edits=document.getElementsByClassName("edit");
+		deletes=document.getElementsByClassName("delete")
+		for(i=0;i<edits.length;i++)
+			edits[i].addEventListener('click',edit,false);
+		for(i=0;i<deletes.length;i++)
+			deletes[i].addEventListener('click',del,false);
+	}
+	
+</script>
+{% endblock %}
