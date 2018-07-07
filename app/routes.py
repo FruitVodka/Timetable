@@ -322,6 +322,7 @@ def subject_table():
 	cursor.execute(viewe)
 	datae=cursor.fetchall()
 	return render_template('subject_table.html',datas=datas,datae=datae)
+	
 # ROOM ENTITY
 	
 @app.route('/room_home')
@@ -428,10 +429,11 @@ def pickedsections():
 	con.commit()
 	session['currentsection']='A'
 	session['whatsdone']=zeroes
-	return "Hi, this is me"
+	return redirect('/subject')
 	
 subjects=[]
 labs=[]
+
 class subForm(Form):
 	global subjects
 	con=mysql.connect()
@@ -460,34 +462,11 @@ def subject():
 	if request.method == 'POST':
 		subjects.extend([request.form['subt1'],request.form['subt2'],request.form['subt3'],request.form['subt4'],request.form['subt5']])
 		labs.extend([request.form['subl1'],request.form['subl2'],request.form['subl3']])
-		return redirect("/writesections")
+		return redirect('sectioncentral')
 	return render_template('sub.html',form=form)
 
-
-@app.route('/writesections')
-def writesections():
-	con=mysql.connect()
-	cursor=con.cursor()
-	print(ns, semester)
-	zeroes=[]
-	if ns>0 and semester>0:
-		sections=[]
-		ss='A'
-		for i in range(ns):
-			sections.append(ss)
-			ss=chr(ord(ss)+1)
-			zeroes.append(0)
-		for i in range(ns):
-			cursor.callproc('create_Class',(semester,sections[i]))
-		con.commit()
-		session['currentsection']='A'
-		session['whatsdone']=zeroes
-		return redirect('/pickteachers')
-	else:
-		return('Oops, start from the beginning please')
-
-@app.route('/pickteachers')
-def pickteachers():
+@app.route('/sectioncentral')
+def sectioncentral():
 	section=session.get('currentsection')
 	zeroes=session.get('whatsdone')
 	flag=0
@@ -497,7 +476,7 @@ def pickteachers():
 			flag=1
 			break
 	if(flag==0):
-		return 'done'
+		return redirect('/Central')
 	session['whatsdone']=zeroes
 	nextsection=chr(ord(section)+1)
 	session['currentsection']=nextsection
@@ -510,7 +489,7 @@ def pickteachers():
 	global subjects
 	global labs
 	print(subjects, labs)
-	return render_template('pickteachers.html',semester=semester,section=section,subjects=subjects,fac=fac, labs=labs)
+	return render_template('pickteachers.html',semester=semester,section=section,subjects=subjects,fac=fac,labs=labs)
 	
 @app.route('/pickedteachers', methods=['GET', 'POST'])
 def pickedteachers():
@@ -639,4 +618,4 @@ def pickedrooms():
 			cursor.callproc('create_Roomssection',(row[0],row[1],row[2],row[4]))
 		row=[]
 	con.commit()
-	return redirect('/pickteachers')
+	return redirect('/sectioncentral')
