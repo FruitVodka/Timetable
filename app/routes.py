@@ -375,22 +375,19 @@ class OddEvenForm(Form):
 	oddeve = RadioField('Select semester category: ',choices=[(1,'Odd'),(2,'Even')])
 	submit = SubmitField("Next")
 
-oe=-1
-
 @app.route('/start', methods = ['GET', 'POST'])
 def start():
-	global oe
+	oe=-1
 	form1 = OddEvenForm()
 	if request.method == 'POST':
    		oe = request.form['oddeve']
+		session['oe']=oe
    		return redirect('/Central_Init')
 	return render_template('start.html',form=form1,code=302)
 
-ns=-1
-semester=-1
-
 @app.route('/Central_Init')
 def Central_Init():
+	oe=session.get('oe')
 	if oe=='1':
 		session['semesters']=['3','5','7']
 	elif oe=='2':
@@ -506,8 +503,8 @@ def sectioncentral():
 	cursor.execute(fac)
 	data=cursor.fetchall()
 	fac=data
-	global subjects
-	global labs
+	subjects=session.get('subjects')
+	labs=session.get('labs')
 	print(subjects, labs)
 	return render_template('pickteachers.html',semester=semester,section=section,subjects=subjects,fac=fac,labs=labs)
 	
@@ -522,9 +519,15 @@ def pickedteachers():
 	print("")
 	print(labteachers1, labteachers2, labteachers3, labteachers4)
 	row=[]
-	global subjects
-	global labs
-	global semester
+	subjects=session.get('subjects')
+	labs=session.get('labs')
+	#for current semester
+	nextsem=session.get('currentsem')
+	semesters=session.get('semesters')
+	if(nextsem!='NULL'):
+		semester=str(eval(nextsem)-2)
+	else:
+		semester=semesters[2]
 	con=mysql.connect()
 	cursor=con.cursor()
 	for i in range(len(subjects)):
@@ -591,7 +594,14 @@ def pickrooms():
 	cursor.execute(cr)
 	data=cursor.fetchall()
 	classrooms=data
-	global labs
+	#for current semester
+	nextsem=session.get('currentsem')
+	semesters=session.get('semesters')
+	if(nextsem!='NULL'):
+		semester=str(eval(nextsem)-2)
+	else:
+		semester=semesters[2]
+	labs=session.get('labs')
 	return render_template('pickrooms.html',semester=semester,section=section,labs=labs,classrooms=classrooms)
 
 @app.route('/pickedrooms', methods=['GET', 'POST'])
@@ -603,9 +613,15 @@ def pickedrooms():
 	print("")
 	print(labroom1, labroom2)
 	row=[]
-	global subjects
-	global labs
-	global semester
+	subjects=session.get('subjects')
+	labs=session.get('labs')
+	#for current semester
+	nextsem=session.get('currentsem')
+	semesters=session.get('semesters')
+	if(nextsem!='NULL'):
+		semester=str(eval(nextsem)-2)
+	else:
+		semester=semesters[2]
 	con=mysql.connect()
 	cursor=con.cursor()
 	for i in range(len(subjects)):
