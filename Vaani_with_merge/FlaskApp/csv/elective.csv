@@ -1,0 +1,47 @@
+Code,Title,Group
+UE15CS311,Advanced Algorithms,1
+UE15CS312,Processor & SoC Architecture,1
+UE15CS313,Advanced Database Management Systems,1
+UE15CS314,Big Data,1
+UE15CS315,Multimedia Computing,1
+UE15CS316,XML Technologies,1
+UE15CS321,Computer Graphics and Visualization,2
+UE15CS322,Data Analytics,2
+UE15CS323,Fuzzy Logic,2
+UE15CS324,Scientific Computing,2
+UE15CS325,Artificial Intelligence,2
+UE15CS326,Mobile Computing,2
+UE15CS327,Reconfigurable Computing,2
+UE15CS331,Computer Network Security,3
+UE15CS332,Storage Area Networks,3
+UE15CS333,Natural Language Processing,3
+UE15CS334,High Performance Computing Architecture,3
+UE15CS335,Advanced Computer Networks,3
+UE15CS336,Parallel Computing,3
+UE15CS337,Generic Programming,3
+UE15CS338,Architecture of Open Source Technologies,3
+UE15CS341,Cloud Computing,4
+UE15CS342,Ad-hoc Sensor Networks,4
+UE15CS343,Software Defined Networks,4
+UE15CS344,Knowledge Management,4
+UE15CS345,Semantic Web Technologies,4
+UE15CS346,System Modeling and Simulation,4
+UE15CS347,Network Management,4
+UE15CS348,Digital Image Processing,4
+UE14CS411,Green Computing,5
+UE14CS412,Enterprise Resource Planning,5
+UE14CS413,Design Patterns,5
+UE14CS414,Algorithms for Information Retrieval,5
+UE14CS415,Content Management,5
+UE14CS416,Cognitive Science,5
+UE14CS417,Computer Vision,5
+UE14CS421,Information Security,6
+UE14CS422,Web Services,6
+UE14CS423,Optical Networks,6
+UE14CS424,Algorithms for Intelligent Web,6
+UE14CS425,Social Network Analytics,6
+UE14CS426,Computer Systems Performance Analysis,6
+UE14CS427,Software Metrics,6
+UE14CS428,Software Design,6
+UE14CS452,Introduction to Software Testing,7
+UE14CS453,Introduction to Business,7

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action = "/start" method = post id="oddevenform">
+	{{ form.oddeve.label (class_='headinglabel')}}<br/>{{ form.oddeve (class_='options') }}<br><br>
+	{{ form.submit }}
+</form>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="article">
+			<a href="/load_timeslots" class="fac">Load Time Slots to Database</a><br><br><br>
+			{% if v %}
+				<img src="static/images/smalltick.png" class="smalltickts"></img>
+			{% endif %}
+			<a href="/delete_timeslots" class="fac">Delete All Time Slots</a>
+			{% if v2 %}
+				<img src="static/images/smalltick.png" class="smalltick2ts"></img>
+			{% endif %}
+{% endblock %}

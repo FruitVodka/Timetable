@@ -1,0 +1,169 @@
+<html>
+	<head>
+	</head>
+	<body>
+		<div style="visibility:hidden" id="free_hours_div">
+			{% for ts in TS %}
+			<div>{{ts}}</div>
+			{% endfor %}
+		</div>
+		<form onsubmit="return check()" action="/after_freeze" method="POST">
+			<label>For group {{gr}}, freeze elective hours: <br/><br/>
+			<table>
+				<tr>
+					<th>Day</th><th>8:15-9:15</th><th>9:15-10:15</th><th>10:45-11:45</th><th>11:45-12.45</th><th>1:30-2:30</th><th>2.30-3.30</th>
+				</tr>
+				<tr>
+					<th>Monday</th>
+					<td><input type="checkbox" name="Monday" value="11"></input>
+					<td><input type="checkbox" name="Monday" value="12"></input>
+					<td><input type="checkbox" name="Monday" value="13"></input>
+					<td><input type="checkbox" name="Monday" value="14"></input>
+					<td><input type="checkbox" name="Monday" value="15"></input>
+					<td><input type="checkbox" name="Monday" value="16"></input>
+				</tr>
+				<tr>
+					<th>Tuesday</th>
+					<td><input type="checkbox" name="Tuesday" value="21"></input>
+					<td><input type="checkbox" name="Tuesday" value="22"></input>
+					<td><input type="checkbox" name="Tuesday" value="23"></input>
+					<td><input type="checkbox" name="Tuesday" value="24"></input>
+					<td><input type="checkbox" name="Tuesday" value="25"></input>
+					<td><input type="checkbox" name="Tuesday" value="26"></input>
+				</tr>
+				<tr>
+					<th>Wednesday</th>
+					<td><input type="checkbox" name="Wednesday" value="31"></input>
+					<td><input type="checkbox" name="Wednesday" value="32"></input>
+					<td><input type="checkbox" name="Wednesday" value="33"></input>
+					<td><input type="checkbox" name="Wednesday" value="34"></input>
+					<td><input type="checkbox" name="Wednesday" value="35"></input>
+					<td><input type="checkbox" name="Wednesday" value="36"></input>
+				</tr>
+				<tr>
+					<th>Thursday</th>
+					<td><input type="checkbox" name="Thursday" value="41"></input>
+					<td><input type="checkbox" name="Thursday" value="42"></input>
+					<td><input type="checkbox" name="Thursday" value="43"></input>
+					<td><input type="checkbox" name="Thursday" value="44"></input>
+					<td><input type="checkbox" name="Thursday" value="45"></input>
+					<td><input type="checkbox" name="Thursday" value="46"></input>
+				</tr>
+				<tr>
+					<th>Friday</th>
+					<td><input type="checkbox" name="Friday" value="51"></input>
+					<td><input type="checkbox" name="Friday" value="52"></input>
+					<td><input type="checkbox" name="Friday" value="53"></input>
+					<td><input type="checkbox" name="Friday" value="54"></input>
+					<td><input type="checkbox" name="Friday" value="55"></input>
+					<td><input type="checkbox" name="Friday" value="56"></input>
+				</tr>
+			</table>
+				
+			<input type="submit" value="Submit">
+		</form>
+		<br/>
+	</body>
+	<script>
+		//assuming TS is a list of lists with free periods eg [['Monday','2:30-3:30'],['Tuesday','2:30-3:30']]
+		var free_hours_div=document.getElementById("free_hours_div")
+		var x=free_hours_div.children
+		for(i=0;i<x.length;i++)
+		{
+			txt=x[i].textContent
+			txt=txt.substring(1,txt.length-1)
+			console.log(txt)
+			txtlist=txt.split(',')
+			console.log(txtlist)
+			nm=txtlist[0]
+			nm=nm.substring(1,nm.length-1)
+			console.log(nm)
+			t=txtlist[1]
+			t=t.substring(2,t.length-1)
+			console.log(t)
+			checklist=document.getElementsByName(nm)
+			console.log(checklist)
+			if(t=='8:15-9:15')
+				checklist[0].disabled=true
+			else if(t=='9:15-10:15')
+				checklist[1].disabled=true
+			else if(t=='10:45-11:45')
+				checklist[2].disabled=true
+			else if(t=='11:45-12:45')
+				checklist[3].disabled=true
+			else if(t=='1:30-2:30')
+				checklist[4].disabled=true
+			else if(t=='2:30-3:30')
+				checklist[5].disabled=true			
+		}
+		
+		function check()
+		{
+			var allInputs = document.getElementsByTagName("input");
+			var results = [];
+			var x = document.getElementsByTagName("input");
+			console.log(x)
+			count=0
+			for(i=0; i<x.length; i++)
+			{
+				if(x[i].checked)
+				{
+					results.push(x[i].value);
+				}
+			}
+			flag=0;
+			hours=[]
+			console.log(results)
+			console.log(results[0][0])
+			console.log(results.length)
+			if(results.length!=4)
+			{
+				alert("oh n0000");
+				return false;
+			}
+			else
+			{
+				days=[]
+				for(i=0;i<(results.length-1);i++)
+				{
+					if(results[i][0]==results[i+1][0])
+					{
+						console.log(results[i][0])
+						if(results[i][1]=='1' && results[i+1][1]=='2')
+						{
+							days.push(results[i][0]);
+							hours.push('1')
+							hours.push('2')
+						}
+						if(results[i][1]=='5' && results[i+1][1]=='6')
+						{
+							days.push(results[i][0]);
+							hours.push('5')
+							hours.push('6')
+						}	
+					}
+				}
+				console.log(hours)
+				hours.sort(function(a, b){return a-b});
+				console.log(hours)
+				console.log(days)
+				if(hours[0]!='1' || hours[1]!='2' || hours[2]!='5' || hours[3]!='6')
+				{
+					alert("oh n00000")
+					return false;
+				}
+				if(parseInt(days[0])==(parseInt(days[1])))
+				{
+					alert("oh n00000")
+					return false;
+				}
+				if((parseInt(days[0])+1)==(parseInt(days[1])))
+				{
+					alert("oh n00000")
+					return false;
+				}
+			}
+			return true;
+		}
+	</script>			
+</html>

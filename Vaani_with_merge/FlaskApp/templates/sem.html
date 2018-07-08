@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for message in form.nos.errors %}
+         <div>{{ message }}</div>
+{% endfor %}
+<form action = "/sem" method = post>
+	{{ form.sem.label (class_='sempicker'}}<br>{{ form.sem }}<br><br>
+	{{ form.nos.label }}<br>{{ form.nos }}<br><br>
+	{{ form.submit }}
+</form>
+{% endblock %}

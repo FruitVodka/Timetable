@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="ftable">
+	<div>Core Subjects</div><br/>
+	<table class="paleBlueRows">
+		<thead>
+		<tr>
+		<th>Code</th>
+		<th>Title</th>
+		<th>Abbreviation</th>
+		</tr>
+		</thead>
+		<tbody>
+			{% for d in datas %}
+			<tr><td>{{d[0]}}</td><td>{{d[1]}}</td><td>{{d[2]}}</td></tr>
+			{% endfor %}
+		</tbody>
+	</table><br/><br/>
+	<div>Electives</div><br/>
+	<table class="paleBlueRows">
+		<thead>
+		<tr>
+		<th>Code</th>
+		<th>Title</th>
+		<th>Group</th>
+		</tr>
+		</thead>
+		<tbody>
+			{% for d in datae %}
+			<tr><td>{{d[0]}}</td><td>{{d[1]}}</td><td>{{d[2]}}</td>
+			{% endfor %}
+		</tbody>
+	</table>
+	<br/><br/>
+	</div>
+	<div class="overlay"></div>	
+{% endblock %}
