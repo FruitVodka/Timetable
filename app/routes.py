@@ -369,6 +369,8 @@ def delete_rooms():
 	return render_template("room_home.html",v2=v2)
 
 
+#FROM START
+	
 class OddEvenForm(Form):
 	oddeve = RadioField('Select semester category: ',choices=[(1,'Odd'),(2,'Even')])
 	submit = SubmitField("Next")
@@ -430,12 +432,8 @@ def pickedsections():
 	session['currentsection']='A'
 	session['whatsdone']=zeroes
 	return redirect('/subject')
-	
-subjects=[]
-labs=[]
 
 class subForm(Form):
-	global subjects
 	con=mysql.connect()
 	cursor=con.cursor()
 	view='select code, title from subject order by title'
@@ -444,24 +442,46 @@ class subForm(Form):
 	arr=[list(item) for item in data]
 	for i in range(0,len(data)):
 		arr[i][0]=arr[i][1]
-	subt1 = SelectField('Subject 1',choices=arr)
-	subt2 = SelectField('Subject 2',choices=arr)
-	subt3 = SelectField('Subject 3',choices=arr)
-	subt4 = SelectField('Subject 4',choices=arr)
-	subt5 = SelectField('Subject 5',choices=arr)
-	subl1 = SelectField('Lab 1',choices=arr)
-	subl2 = SelectField('Lab 2',choices=arr)
-	subl3 = SelectField('Lab 3',choices=arr)
+	nextsem=session.get['currentsem']
+	semesters=session.get('semesters')
+	if nextsem=='5' or nextsem='6':
+		subt1 = SelectField('Subject 1',choices=arr)
+		subt2 = SelectField('Subject 2',choices=arr)
+		subt3 = SelectField('Subject 3',choices=arr)
+		subt4 = SelectField('Subject 4',choices=arr)
+		subt5 = SelectField('Subject 5',choices=arr)
+		subl1 = SelectField('Lab 1',choices=arr)
+		subl2 = SelectField('Lab 2',choices=arr)
+		subl3 = SelectField('Lab 3',choices=arr)
+	elif nextsem=='7' or nextsem=='8' or (nextsem=='NULL' and semesters[2]=='7'):
+		subt1 = SelectField('Subject 1',choices=arr)
+		subt2 = SelectField('Subject 2',choices=arr)
+		subt3 = SelectField('Subject 3',choices=arr)
+		ubl1 = SelectField('Lab 1',choices=arr)
+		subl2 = SelectField('Lab 2',choices=arr)
+		subl3 = SelectField('Lab 3',choices=arr)	
 	submit = SubmitField("Send")
 
 @app.route('/subject',methods=['GET','POST'])
 def subject():
 	form = subForm()
-	global subjects
-	global labs
+	subjects=[]
+	labs=[]
+	nextsem=session.get('currentsem')
+	semesters=session.get('semesters')
+	if nextsem=='NULL' and semesters[2]=='8':
+		return "must go to electives"
 	if request.method == 'POST':
-		subjects.extend([request.form['subt1'],request.form['subt2'],request.form['subt3'],request.form['subt4'],request.form['subt5']])
-		labs.extend([request.form['subl1'],request.form['subl2'],request.form['subl3']])
+		#working with semester 3 or 4
+		if nextsem=='5' or nextsem=='6':
+			subjects.extend([request.form['subt1'],request.form['subt2'],request.form['subt3'],request.form['subt4'],request.form['subt5']])
+			labs.extend([request.form['subl1'],request.form['subl2'],request.form['subl3']])
+		#working with semester 5, 6 or 7
+		elif nextsem=='7' or nextsem=='8' or (nextsem=='NULL' and semesters[2]=='7'):
+			subjects.extend([request.form['subt1'],request.form['subt2'],request.form['subt3']])
+			labs.extend([request.form['subl1'],request.form['subl2'],request.form['subl3']])
+		session['subjects']=subjects
+		session['labs']=labs
 		return redirect('sectioncentral')
 	return render_template('sub.html',form=form)
 
